@@ -9,5 +9,5 @@ Amp you zen. Get motivational quotes daily, from the most curated selection!
   🔥 Keeps you motivated, and helps you get through the day.
 
 ![Banner](images/motivationalquotebanner.png)
-![Screenshot 1](images/ss1.png){:height="700px" width="400px"}
-![Screenshot 2](images/ss2.png){:height="700px" width="400px"}
+![Screenshot 1](images/ss1.png =250x250)
+![Screenshot 2](images/ss2.png)
