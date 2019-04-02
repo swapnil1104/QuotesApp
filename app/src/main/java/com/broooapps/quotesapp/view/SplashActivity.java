@@ -1,13 +1,12 @@
 package com.broooapps.quotesapp.view;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,12 +16,14 @@ import com.broooapps.quotesapp.network.OkHttpTask;
 import com.broooapps.quotesapp.repository.QuotesRepository;
 import com.broooapps.quotesapp.util.Navigator;
 import com.broooapps.quotesapp.viewmodel.SplashActivityViewModel;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.harjot.rotatingtext.RotatingTextWrapper;
 import com.sdsmdg.harjot.rotatingtext.models.Rotatable;
 import com.squareup.picasso.Picasso;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private static final String TAG = SplashActivity.class.getSimpleName();
     private ImageView bg_image;
     private RotatingTextWrapper rotating_text_wrapper;
 
@@ -37,7 +38,9 @@ public class SplashActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(SplashActivityViewModel.class);
 
+
         if (viewModel.isNetworkAvailable()) {
+            fetchFirebaseToken();
             initializeViews();
             defaultConfigurations();
         } else {
@@ -45,6 +48,7 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }
     }
+
 
     private void initializeViews() {
         bg_image = findViewById(R.id.bg_image);
@@ -74,6 +78,20 @@ public class SplashActivity extends AppCompatActivity {
 
         LoadTask task = new LoadTask();
         task.execute();
+    }
+
+    private void fetchFirebaseToken() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+
+                });
     }
 
     class LoadTask extends AsyncTask<Void, Void, Void> {
