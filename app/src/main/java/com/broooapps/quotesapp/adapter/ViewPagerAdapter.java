@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.broooapps.quotesapp.R;
 import com.broooapps.quotesapp.model.Quote;
-import com.hanks.htextview.fade.FadeTextView;
+import com.broooapps.quotesapp.util.ViewUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -75,18 +75,27 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.view_pager_quote, null);
+
         Quote quote = quotes.get(position);
+        if (quote != null) {
 
-        ((TextView) view.findViewById(R.id.text_quote_author)).setText(quote.getAuthor());
-        ((TextView) view.findViewById(R.id.text_quote_display)).setText(quote.getText());
+            TextView text_quote_display = view.findViewById(R.id.text_quote_display);
+            TextView text_quote_author = view.findViewById(R.id.text_quote_author);
 
-        Picasso.get()
-                .load(quote.getUrl())
-                .fit()
-                .centerCrop()
-                .into((ImageView) view.findViewById(R.id.bg_image));
+            ViewUtils.setVerticalBias(text_quote_display);
 
-        container.addView(view);
+            text_quote_author.setText(quote.getAuthor());
+            text_quote_display.setText(quote.getText());
+
+            Picasso.get()
+                    .load(quote.getUrl())
+                    .fit()
+                    .centerCrop()
+                    .into((ImageView) view.findViewById(R.id.bg_image));
+
+            container.addView(view);
+        }
+
         return view;
     }
 
